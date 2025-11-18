@@ -1,6 +1,6 @@
 # 🚀 ManPower - Job Marketplace Platform
 
-A modern, full-stack MERN application connecting skilled workers with businesses for freelance and contract opportunities.
+A modern, full-stack MERN application connecting skilled workers with businesses for freelance and contract opportunities. This project is actively under development, and many features are still being implemented or improved.
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
