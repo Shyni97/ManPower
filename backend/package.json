@@ -9,7 +9,12 @@
     "start": "node dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["manpower", "job-marketplace", "mern", "typescript"],
+  "keywords": [
+    "manpower",
+    "job-marketplace",
+    "mern",
+    "typescript"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
@@ -24,12 +29,18 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@types/multer": "^2.0.0",
+    "@types/nodemailer": "^7.0.4",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.9.3"
+    "mongoose": "^8.9.3",
+    "multer": "^2.0.2",
+    "nodemailer": "^7.0.10",
+    "socket.io": "^4.8.1",
+    "stripe": "^20.0.0"
   }
 }

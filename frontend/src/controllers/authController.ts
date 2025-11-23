@@ -25,6 +25,9 @@ export const registerUser = async (data: RegisterData): Promise<AuthResponse> =>
   }
 };
 
+// Alias for compatibility
+export const register = registerUser;
+
 /**
  * Login user
  * @param data - Login credentials (email, password)

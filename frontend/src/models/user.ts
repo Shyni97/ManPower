@@ -21,6 +21,17 @@ export interface User {
   name: string;
   email: string;
   role: UserRole;
+  workerProfile?: {
+    skills?: string[];
+    experience?: string;
+    hourlyRate?: number;
+    availability?: string;
+  };
+  businessProfile?: {
+    companyName?: string;
+    industry?: string;
+    description?: string;
+  };
   createdAt?: string;
   updatedAt?: string;
 }

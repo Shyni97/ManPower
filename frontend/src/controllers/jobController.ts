@@ -126,3 +126,30 @@ export const searchJobsBySkills = async (skills: string[]): Promise<Job[]> => {
     throw new Error(error.response?.data?.message || 'Failed to search jobs');
   }
 };
+
+/**
+ * Get worker applications
+ * @returns Promise with applications data
+ */
+export const getWorkerApplications = async (): Promise<any> => {
+  try {
+    const response = await get('/applications/worker');
+    return response;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || 'Failed to fetch applications');
+  }
+};
+
+/**
+ * Get wallet balance
+ * @returns Promise with wallet data
+ */
+export const getWalletBalance = async (): Promise<any> => {
+  try {
+    const response = await get('/payments/wallet');
+    return response;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || 'Failed to fetch wallet balance');
+  }
+};
+

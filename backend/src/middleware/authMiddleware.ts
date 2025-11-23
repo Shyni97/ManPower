@@ -100,3 +100,8 @@ export const authorize = (...roles: string[]) => {
     next();
   };
 };
+
+/**
+ * Alias for authorize for convenience
+ */
+export const restrictTo = authorize;

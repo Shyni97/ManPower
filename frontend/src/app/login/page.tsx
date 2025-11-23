@@ -13,9 +13,12 @@ import { loginUser } from '@/controllers/authController';
 import InputField from '@/components/InputField';
 import { isValidEmail, formatErrorMessage } from '@/utils/validators';
 
+import { usePageTitle } from '@/hooks/usePageTitle';
+
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
+  usePageTitle('Login - ManPower');
 
   const [formData, setFormData] = useState({
     email: '',

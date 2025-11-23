@@ -114,7 +114,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
  * @desc    Logout user & clear cookie
  * @access  Private
  */
-export const logout = async (req: Request, res: Response): Promise<void> => {
+export const logout = async (_req: Request, res: Response): Promise<void> => {
   try {
     // Clear JWT cookie
     clearToken(res);

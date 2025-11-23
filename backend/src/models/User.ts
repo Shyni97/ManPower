@@ -12,6 +12,57 @@ export enum UserRole {
 }
 
 /**
+ * Worker Profile Interface
+ */
+export interface IWorkerProfile {
+  skills: string[];
+  experience: string;
+  availability: 'available' | 'busy' | 'unavailable';
+  phoneNumber?: string;
+  address?: string;
+  portfolio?: string;
+  bio?: string;
+  hourlyRate?: number;
+}
+
+/**
+ * Business Profile Interface
+ */
+export interface IBusinessProfile {
+  companyName?: string;
+  companySize?: string;
+  industry?: string;
+  website?: string;
+  phoneNumber?: string;
+  address?: string;
+  description?: string;
+}
+
+/**
+ * Verification Status Interface
+ */
+export interface IVerification {
+  isVerified: boolean;
+  verificationStatus: 'pending' | 'approved' | 'rejected' | 'not_submitted';
+  documents?: {
+    idDocument?: string;
+    selfie?: string;
+  };
+  verifiedAt?: Date;
+  verifiedBy?: mongoose.Types.ObjectId;
+}
+
+/**
+ * Wallet Interface
+ */
+export interface IWallet {
+  balance: number;
+  pendingBalance: number;
+  totalEarnings: number;
+  totalWithdrawals: number;
+}
+
+/**
  * User Document Interface
  * Extends mongoose Document with custom user properties
  */
@@ -20,6 +71,26 @@ export interface IUser extends Document {
   email: string;
   password: string;
   role: UserRole;
+  profileImage?: string;
+  
+  // Worker-specific fields
+  workerProfile?: IWorkerProfile;
+  
+  // Business-specific fields
+  businessProfile?: IBusinessProfile;
+  
+  // Verification
+  verification: IVerification;
+  
+  // Wallet (for workers)
+  wallet?: IWallet;
+  
+  // Rating
+  rating: {
+    average: number;
+    count: number;
+  };
+  
   createdAt: Date;
   updatedAt: Date;
   matchPassword(enteredPassword: string): Promise<boolean>;
@@ -59,6 +130,96 @@ const userSchema = new Schema<IUser>(
       enum: Object.values(UserRole),
       default: UserRole.WORKER,
       required: [true, 'Please specify a user role'],
+    },
+    profileImage: {
+      type: String,
+    },
+    workerProfile: {
+      skills: {
+        type: [String],
+        default: [],
+      },
+      experience: {
+        type: String,
+        default: '',
+      },
+      availability: {
+        type: String,
+        enum: ['available', 'busy', 'unavailable'],
+        default: 'available',
+      },
+      phoneNumber: String,
+      address: String,
+      portfolio: String,
+      bio: String,
+      hourlyRate: {
+        type: Number,
+        min: 0,
+      },
+    },
+    businessProfile: {
+      companyName: String,
+      companySize: String,
+      industry: String,
+      website: String,
+      phoneNumber: String,
+      address: String,
+      description: String,
+    },
+    verification: {
+      isVerified: {
+        type: Boolean,
+        default: false,
+      },
+      verificationStatus: {
+        type: String,
+        enum: ['pending', 'approved', 'rejected', 'not_submitted'],
+        default: 'not_submitted',
+      },
+      documents: {
+        idDocument: String,
+        selfie: String,
+      },
+      verifiedAt: Date,
+      verifiedBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    },
+    wallet: {
+      balance: {
+        type: Number,
+        default: 0,
+        min: 0,
+      },
+      pendingBalance: {
+        type: Number,
+        default: 0,
+        min: 0,
+      },
+      totalEarnings: {
+        type: Number,
+        default: 0,
+        min: 0,
+      },
+      totalWithdrawals: {
+        type: Number,
+        default: 0,
+        min: 0,
+      },
+    },
+    rating: {
+      average: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 5,
+      },
+      count: {
+        type: Number,
+        default: 0,
+        min: 0,
+      },
     },
   },
   {

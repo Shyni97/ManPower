@@ -4,6 +4,15 @@ import cookieParser from 'cookie-parser';
 import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
 import jobRoutes from './routes/jobRoutes';
+import workerRoutes from './routes/workerRoutes';
+import applicationRoutes from './routes/applicationRoutes';
+import chatRoutes from './routes/chatRoutes';
+import paymentRoutes from './routes/paymentRoutes';
+import ratingRoutes from './routes/ratingRoutes';
+import verificationRoutes from './routes/verificationRoutes';
+import notificationRoutes from './routes/notificationRoutes';
+import adminRoutes from './routes/adminRoutes';
+import reportRoutes from './routes/reportRoutes';
 import { errorHandler, notFound } from './middleware/errorMiddleware';
 
 /**
@@ -39,7 +48,7 @@ app.use(cookieParser());
  */
 
 // Health check route
-app.get('/api/health', (req, res) => {
+app.get('/api/health', (_req, res) => {
   res.status(200).json({
     success: true,
     message: 'ManPower API is running',
@@ -51,6 +60,15 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/jobs', jobRoutes);
+app.use('/api/workers', workerRoutes);
+app.use('/api/applications', applicationRoutes);
+app.use('/api/chat', chatRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/ratings', ratingRoutes);
+app.use('/api/verification', verificationRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/reports', reportRoutes);
 
 /**
  * Error Handling Middleware

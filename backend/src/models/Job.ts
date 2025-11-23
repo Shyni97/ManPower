@@ -9,8 +9,22 @@ export interface IJob extends Document {
   title: string;
   description: string;
   skills: string[];
+  jobType: 'full-time' | 'part-time' | 'contract' | 'temporary';
   location: string;
+  numberOfWorkers: number;
   urgency: 'low' | 'medium' | 'high';
+  budget?: {
+    min: number;
+    max: number;
+    currency: string;
+  };
+  status: 'open' | 'in-progress' | 'completed' | 'cancelled';
+  applicationDeadline?: Date;
+  startDate?: Date;
+  duration?: string;
+  requirements?: string[];
+  benefits?: string[];
+  applicationsCount: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -48,16 +62,69 @@ const jobSchema = new Schema<IJob>(
         message: 'At least one skill is required',
       },
     },
+    jobType: {
+      type: String,
+      enum: ['full-time', 'part-time', 'contract', 'temporary'],
+      default: 'full-time',
+      required: [true, 'Please specify job type'],
+    },
     location: {
       type: String,
       required: [true, 'Please provide a job location'],
       trim: true,
+    },
+    numberOfWorkers: {
+      type: Number,
+      required: [true, 'Please specify number of workers needed'],
+      min: [1, 'At least one worker is required'],
+      default: 1,
     },
     urgency: {
       type: String,
       enum: ['low', 'medium', 'high'],
       default: 'medium',
       required: [true, 'Please specify job urgency'],
+    },
+    budget: {
+      min: {
+        type: Number,
+        min: 0,
+      },
+      max: {
+        type: Number,
+        min: 0,
+      },
+      currency: {
+        type: String,
+        default: 'USD',
+      },
+    },
+    status: {
+      type: String,
+      enum: ['open', 'in-progress', 'completed', 'cancelled'],
+      default: 'open',
+    },
+    applicationDeadline: {
+      type: Date,
+    },
+    startDate: {
+      type: Date,
+    },
+    duration: {
+      type: String,
+    },
+    requirements: {
+      type: [String],
+      default: [],
+    },
+    benefits: {
+      type: [String],
+      default: [],
+    },
+    applicationsCount: {
+      type: Number,
+      default: 0,
+      min: 0,
     },
   },
   {
