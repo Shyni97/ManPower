@@ -105,9 +105,11 @@ export default function PostJobPage() {
         } : undefined,
       };
 
-      await api.post('/jobs', payload);
-      alert('Job posted successfully!');
-      router.push('/dashboard/business/jobs');
+      const response = await api.post('/jobs', payload);
+      if (response.data?.success || response.status === 201) {
+        alert('Job posted successfully!');
+        router.push('/dashboard/business/jobs');
+      }
     } catch (error: any) {
       alert(error.response?.data?.message || 'Failed to post job');
     } finally {
