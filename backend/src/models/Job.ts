@@ -24,6 +24,7 @@ export interface IJob extends Document {
   duration?: string;
   requirements?: string[];
   benefits?: string[];
+  jobImage?: string;
   applicationsCount: number;
   createdAt: Date;
   updatedAt: Date;
@@ -120,6 +121,9 @@ const jobSchema = new Schema<IJob>(
     benefits: {
       type: [String],
       default: [],
+    },
+    jobImage: {
+      type: String,
     },
     applicationsCount: {
       type: Number,

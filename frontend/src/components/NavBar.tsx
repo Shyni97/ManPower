@@ -52,9 +52,11 @@ const NavBar: React.FC = () => {
             <Link href="/" className={navLinkClass('/')}>
               Home
             </Link>
-            <Link href="/jobs" className={navLinkClass('/jobs')}>
-              Browse Jobs
-            </Link>
+            {user?.role === 'worker' && (
+              <Link href="/jobs" className={navLinkClass('/jobs')}>
+                Browse Jobs
+              </Link>
+            )}
 
             {isAuthenticated ? (
               <>
@@ -67,10 +69,10 @@ const NavBar: React.FC = () => {
                       Dashboard
                     </Link>
                     <Link
-                      href="/jobs/create"
-                      className={navLinkClass('/jobs/create')}
+                      href="/dashboard/business/jobs"
+                      className={navLinkClass('/dashboard/business/jobs')}
                     >
-                      Post Job
+                      My Job Posts
                     </Link>
                   </>
                 )}
@@ -170,13 +172,15 @@ const NavBar: React.FC = () => {
             >
               Home
             </Link>
-            <Link
-              href="/jobs"
-              className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Browse Jobs
-            </Link>
+            {user?.role === 'worker' && (
+              <Link
+                href="/jobs"
+                className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Browse Jobs
+              </Link>
+            )}
 
             {isAuthenticated ? (
               <>
@@ -190,11 +194,11 @@ const NavBar: React.FC = () => {
                       Dashboard
                     </Link>
                     <Link
-                      href="/jobs/create"
+                      href="/dashboard/business/jobs"
                       className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      Post Job
+                      My Job Posts
                     </Link>
                   </>
                 )}

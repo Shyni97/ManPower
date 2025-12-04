@@ -25,6 +25,12 @@ interface Job {
     max: number;
     currency: string;
   };
+  requirements?: string[];
+  benefits?: string[];
+  startDate?: string;
+  duration?: string;
+  applicationDeadline?: string;
+  jobImage?: string;
   status?: string;
   createdAt: string;
   applicants?: any[];
@@ -58,7 +64,10 @@ export default function BusinessJobsPage() {
     try {
       const response = await api.get('/jobs/business/my-jobs');
       if (response.data?.success) {
-        setJobs(response.data.data || []);
+        const jobsData = response.data.data || [];
+        console.log('Fetched jobs:', jobsData);
+        console.log('First job image:', jobsData[0]?.jobImage);
+        setJobs(jobsData);
       }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to fetch jobs');
@@ -155,7 +164,7 @@ export default function BusinessJobsPage() {
           </div>
         )}
 
-        {/* Jobs List */}
+        {/* Jobs Grid */}
         {filteredJobs.length === 0 ? (
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
             <div className="text-gray-400 text-6xl mb-4">📋</div>
@@ -173,96 +182,121 @@ export default function BusinessJobsPage() {
             </button>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredJobs.map((job) => (
               <div
                 key={job._id}
-                className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+                className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col"
               >
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h2 className="text-xl font-semibold text-gray-900">{job.title}</h2>
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          job.urgency === 'high'
-                            ? 'bg-red-100 text-red-800'
-                            : job.urgency === 'medium'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-green-100 text-green-800'
-                        }`}
-                      >
-                        {job.urgency?.toUpperCase()} URGENCY
-                      </span>
-                      <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
-                        {job.jobType?.toUpperCase()}
-                      </span>
+                {/* Job Image */}
+                <div className="relative h-48 bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center overflow-hidden">
+                  {job.jobImage ? (
+                    <img
+                      src={job.jobImage}
+                      alt={job.title}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="text-6xl">💼</div>
+                  )}
+                  {/* Save Button (like reference) */}
+                  <button className="absolute top-3 right-3 bg-white px-3 py-1 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors shadow-sm">
+                    Saved ⚑
+                  </button>
+                </div>
+
+                {/* Card Content */}
+                <div className="p-6 flex-1 flex flex-col">
+                  {/* Company/Business Name and Time */}
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                        {user?.name?.charAt(0).toUpperCase() || 'B'}
+                      </div>
+                      <span className="text-sm font-medium text-gray-700">{user?.name || 'Business'}</span>
                     </div>
-
-                    <p className="text-gray-700 mb-4 line-clamp-2">{job.description}</p>
-
-                    <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-4">
-                      <span className="flex items-center gap-1">
-                        <span className="font-medium">📍</span>
-                        {job.location}
-                      </span>
-                      {job.numberOfWorkers && (
-                        <span className="flex items-center gap-1">
-                          <span className="font-medium">👥</span>
-                          {job.numberOfWorkers} worker{job.numberOfWorkers > 1 ? 's' : ''} needed
-                        </span>
-                      )}
-                      {job.budget && job.budget.min !== undefined && job.budget.max !== undefined && (
-                        <span className="flex items-center gap-1">
-                          <span className="font-medium">💰</span>
-                          {job.budget.currency} {job.budget.min.toLocaleString()} - {job.budget.max.toLocaleString()}
-                        </span>
-                      )}
-                      <span className="flex items-center gap-1">
-                        <span className="font-medium">📧</span>
-                        {job.applicants?.length || 0} applicants
-                      </span>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {job.skills?.map((skill, index) => (
-                        <span
-                          key={index}
-                          className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-
-                    <p className="text-xs text-gray-500">
-                      Posted on {new Date(job.createdAt).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      })}
-                    </p>
+                    <span className="text-xs text-gray-500">
+                      {Math.floor((Date.now() - new Date(job.createdAt).getTime()) / (1000 * 60 * 60 * 24))} days ago
+                    </span>
                   </div>
 
-                  <div className="flex flex-col gap-2 ml-4">
+                  {/* Job Title */}
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
+                    {job.title}
+                  </h3>
+
+                  {/* Job Type and Urgency Tags */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-md text-sm font-medium">
+                      {job.jobType?.replace('-', ' ')}
+                    </span>
+                    <span
+                      className={`px-3 py-1 rounded-md text-sm font-medium ${
+                        job.urgency === 'high'
+                          ? 'bg-red-100 text-red-700'
+                          : job.urgency === 'medium'
+                          ? 'bg-yellow-100 text-yellow-700'
+                          : 'bg-green-100 text-green-700'
+                      }`}
+                    >
+                      {job.urgency} urgency
+                    </span>
+                  </div>
+
+                  {/* Location and Workers */}
+                  <div className="space-y-2 mb-4 text-sm text-gray-600">
+                    <div className="flex items-center gap-2">
+                      <span>📍</span>
+                      <span>{job.location}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span>👥</span>
+                      <span>{job.numberOfWorkers || 1} worker{(job.numberOfWorkers || 1) > 1 ? 's' : ''} needed</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span>📧</span>
+                      <span>{job.applicants?.length || 0} applicants</span>
+                    </div>
+                  </div>
+
+                  {/* Budget */}
+                  <div className="flex items-center justify-between mb-4 pt-4 border-t border-gray-100">
+                    <div>
+                      {job.budget && job.budget.min !== undefined && job.budget.max !== undefined ? (
+                        <>
+                          <div className="text-xl font-bold text-gray-900">
+                            {job.budget.currency} {job.budget.min.toLocaleString()} - {job.budget.max.toLocaleString()}
+                          </div>
+                          <div className="text-xs text-gray-500">{job.location}</div>
+                        </>
+                      ) : (
+                        <div className="text-gray-500">Budget not specified</div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="mt-auto space-y-2">
                     <button
                       onClick={() => router.push(`/dashboard/business/jobs/${job._id}`)}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                      className="w-full px-4 py-2.5 bg-black text-white rounded-lg font-semibold hover:bg-gray-800 transition-colors"
                     >
                       View Details
                     </button>
-                    <button
-                      onClick={() => router.push(`/dashboard/business/jobs/${job._id}/edit`)}
-                      className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteJob(job._id)}
-                      className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors"
-                    >
-                      Delete
-                    </button>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        onClick={() => router.push(`/dashboard/business/jobs/${job._id}/edit`)}
+                        className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteJob(job._id)}
+                        className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

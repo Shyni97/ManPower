@@ -16,6 +16,8 @@ export default function PostJobPage() {
   const { user } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [jobImage, setJobImage] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [jobData, setJobData] = useState({
     title: '',
     description: '',
@@ -80,6 +82,80 @@ export default function PostJobPage() {
     }
   };
 
+  const handleRemoveRequirement = (index: number) => {
+    setJobData({
+      ...jobData,
+      requirements: jobData.requirements.filter((_, i) => i !== index),
+    });
+  };
+
+  const handleRemoveBenefit = (index: number) => {
+    setJobData({
+      ...jobData,
+      benefits: jobData.benefits.filter((_, i) => i !== index),
+    });
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Please upload an image file');
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert('Image size should be less than 2MB');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const img = new Image();
+      img.onload = () => {
+        // Create canvas to resize image
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Set max dimensions
+        const maxWidth = 800;
+        const maxHeight = 600;
+        let width = img.width;
+        let height = img.height;
+
+        // Calculate new dimensions maintaining aspect ratio
+        if (width > height) {
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width *= maxHeight / height;
+            height = maxHeight;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx?.drawImage(img, 0, 0, width, height);
+
+        // Convert to base64 with compression (70% quality)
+        const compressedImage = canvas.toDataURL('image/jpeg', 0.7);
+        setJobImage(compressedImage);
+        setImagePreview(compressedImage);
+      };
+      img.src = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removeImage = () => {
+    setJobImage(null);
+    setImagePreview(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -103,6 +179,7 @@ export default function PostJobPage() {
           max: parseFloat(jobData.budgetMax),
           currency: 'USD',
         } : undefined,
+        jobImage: jobImage || undefined,
       };
 
       const response = await api.post('/jobs', payload);
@@ -126,6 +203,61 @@ export default function PostJobPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-8 space-y-6">
+          {/* Job Advertisement Image */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Job Advertisement Image (Optional)
+            </label>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+              {imagePreview ? (
+                <div className="relative">
+                  <img
+                    src={imagePreview}
+                    alt="Job advertisement preview"
+                    className="w-full h-64 object-cover rounded-lg"
+                  />
+                  <button
+                    type="button"
+                    onClick={removeImage}
+                    className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600"
+                  >
+                    ×
+                  </button>
+                </div>
+              ) : (
+                <div className="text-center">
+                  <svg
+                    className="mx-auto h-12 w-12 text-gray-400"
+                    stroke="currentColor"
+                    fill="none"
+                    viewBox="0 0 48 48"
+                  >
+                    <path
+                      d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <div className="mt-4">
+                    <label className="cursor-pointer inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                      />
+                      Upload Image
+                    </label>
+                  </div>
+                  <p className="mt-2 text-xs text-gray-500">
+                    PNG, JPG, GIF up to 5MB
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Job Title */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -322,11 +454,23 @@ export default function PostJobPage() {
                 Add
               </button>
             </div>
-            <ul className="list-disc list-inside space-y-1">
+            <div className="flex flex-wrap gap-2">
               {jobData.requirements.map((req, index) => (
-                <li key={index} className="text-gray-700">{req}</li>
+                <span
+                  key={index}
+                  className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium flex items-center gap-2"
+                >
+                  {req}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveRequirement(index)}
+                    className="text-gray-600 hover:text-gray-800"
+                  >
+                    ×
+                  </button>
+                </span>
               ))}
-            </ul>
+            </div>
           </div>
 
           {/* Benefits */}
@@ -351,11 +495,23 @@ export default function PostJobPage() {
                 Add
               </button>
             </div>
-            <ul className="list-disc list-inside space-y-1">
+            <div className="flex flex-wrap gap-2">
               {jobData.benefits.map((benefit, index) => (
-                <li key={index} className="text-gray-700">{benefit}</li>
+                <span
+                  key={index}
+                  className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium flex items-center gap-2"
+                >
+                  {benefit}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveBenefit(index)}
+                    className="text-green-600 hover:text-green-800"
+                  >
+                    ×
+                  </button>
+                </span>
               ))}
-            </ul>
+            </div>
           </div>
 
           {/* Dates */}
