@@ -1,6 +1,6 @@
 /**
  * NavBar Component
- * Global navigation bar with responsive mobile menu
+ * Modern responsive navigation bar for ManPower marketplace
  */
 
 'use client';
@@ -29,131 +29,117 @@ const NavBar: React.FC = () => {
 
   const isActive = (path: string) => pathname === path;
 
-  const navLinkClass = (path: string) =>
-    `px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+  const navLinkClass = (path: string) => {
+    return `px-4 py-2 text-sm font-medium transition-colors ${
       isActive(path)
-        ? 'bg-primary-700 text-white'
-        : 'text-gray-300 hover:bg-primary-600 hover:text-white'
+        ? 'text-blue-600 font-semibold'
+        : 'text-gray-700 hover:text-blue-600'
     }`;
+  };
 
   return (
-    <nav className="bg-primary-800 shadow-lg sticky top-0 z-50">
+    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/" className="flex items-center">
-              <span className="text-2xl font-bold text-white">ManPower</span>
+            <Link href="/" className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-lg">M</span>
+              </div>
+              <span className="text-xl font-bold text-gray-900">ManPower</span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center md:space-x-4">
+          <div className="hidden lg:flex lg:items-center lg:space-x-1">
             <Link href="/" className={navLinkClass('/')}>
               Home
             </Link>
-            {user?.role === 'worker' && (
-              <Link href="/jobs" className={navLinkClass('/jobs')}>
-                Browse Jobs
-              </Link>
-            )}
+            <Link href="/worker" className={navLinkClass('/worker')}>
+              For Workers
+            </Link>
+            <Link href="/business" className={navLinkClass('/business')}>
+              For Businesses
+            </Link>
+            <Link href="/jobs" className={navLinkClass('/jobs')}>
+              Jobs
+            </Link>
+            <Link href="/how-it-works" className={navLinkClass('/how-it-works')}>
+              How It Works
+            </Link>
+            <Link href="/contact" className={navLinkClass('/contact')}>
+              Contact
+            </Link>
+          </div>
 
+          {/* Desktop CTA Buttons */}
+          <div className="hidden lg:flex lg:items-center lg:space-x-3">
             {isAuthenticated ? (
               <>
+                <Link href="/chat" className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">
+                  Messages
+                </Link>
                 {user?.role === 'business' && (
-                  <>
-                    <Link
-                      href="/dashboard/business"
-                      className={navLinkClass('/dashboard/business')}
-                    >
-                      Dashboard
-                    </Link>
-                    <Link
-                      href="/dashboard/business/jobs"
-                      className={navLinkClass('/dashboard/business/jobs')}
-                    >
-                      My Job Posts
-                    </Link>
-                  </>
-                )}
-
-                {user?.role === 'worker' && (
                   <Link
-                    href="/dashboard/worker"
-                    className={navLinkClass('/dashboard/worker')}
+                    href="/dashboard/business"
+                    className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
                   >
                     Dashboard
                   </Link>
                 )}
-
-                <Link href="/chat" className={navLinkClass('/chat')}>
-                  Messages
-                </Link>
-
-                <div className="flex items-center space-x-3 ml-4 pl-4 border-l border-primary-600">
-                  <span className="text-white text-sm">
-                    Hello, <span className="font-semibold">{user?.name}</span>
+                {user?.role === 'worker' && (
+                  <Link
+                    href="/dashboard/worker"
+                    className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+                  >
+                    Dashboard
+                  </Link>
+                )}
+                <div className="flex items-center gap-3 pl-3 border-l border-gray-200">
+                  <span className="text-sm text-gray-600">
+                    {user?.name}
                   </span>
                   <button
                     onClick={handleLogout}
-                    className="px-4 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700 transition-colors"
+                    className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 transition-colors"
                   >
                     Logout
                   </button>
                 </div>
               </>
             ) : (
-              <div className="flex items-center space-x-3">
+              <>
                 <Link
-                  href="/login"
-                  className="px-4 py-2 text-white text-sm font-medium hover:text-primary-200 transition-colors"
+                  href="/worker"
+                  className="px-5 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors"
                 >
-                  Login
+                  Find Work
                 </Link>
                 <Link
-                  href="/register"
-                  className="px-4 py-2 bg-white text-primary-700 rounded-md text-sm font-medium hover:bg-primary-50 transition-colors"
+                  href="/business"
+                  className="px-5 py-2.5 bg-green-600 text-white rounded-lg text-sm font-semibold hover:bg-green-700 transition-colors"
                 >
-                  Sign Up
+                  Post a Job
                 </Link>
-              </div>
+              </>
             )}
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-200 hover:text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              className="inline-flex items-center justify-center p-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <span className="sr-only">Open main menu</span>
               {mobileMenuOpen ? (
-                <svg
-                  className="block h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
+                <svg className="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               ) : (
-                <svg
-                  className="block h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
+                <svg className="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               )}
             </button>
@@ -163,94 +149,111 @@ const NavBar: React.FC = () => {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-primary-700">
-          <div className="px-2 pt-2 pb-3 space-y-1">
+        <div className="lg:hidden bg-white border-t border-gray-200">
+          <div className="px-4 pt-2 pb-3 space-y-1">
             <Link
               href="/"
-              className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600"
+              className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-blue-600"
               onClick={() => setMobileMenuOpen(false)}
             >
               Home
             </Link>
-            {user?.role === 'worker' && (
-              <Link
-                href="/jobs"
-                className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Browse Jobs
-              </Link>
-            )}
+            <Link
+              href="/worker"
+              className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-blue-600"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              For Workers
+            </Link>
+            <Link
+              href="/business"
+              className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-blue-600"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              For Businesses
+            </Link>
+            <Link
+              href="/jobs"
+              className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-blue-600"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Jobs
+            </Link>
+            <Link
+              href="/how-it-works"
+              className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-blue-600"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              How It Works
+            </Link>
+            <Link
+              href="/contact"
+              className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-blue-600"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Contact
+            </Link>
 
             {isAuthenticated ? (
               <>
-                {user?.role === 'business' && (
-                  <>
+                <div className="border-t border-gray-200 pt-3 mt-3">
+                  <Link
+                    href="/chat"
+                    className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-blue-600"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Messages
+                  </Link>
+                  {user?.role === 'business' && (
                     <Link
                       href="/dashboard/business"
-                      className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600"
+                      className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-blue-600"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Dashboard
                     </Link>
+                  )}
+                  {user?.role === 'worker' && (
                     <Link
-                      href="/dashboard/business/jobs"
-                      className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600"
+                      href="/dashboard/worker"
+                      className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-blue-600"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      My Job Posts
+                      Dashboard
                     </Link>
-                  </>
-                )}
+                  )}
+                </div>
 
-                {user?.role === 'worker' && (
-                  <Link
-                    href="/dashboard/worker"
-                    className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Dashboard
-                  </Link>
-                )}
-
-                <Link
-                  href="/chat"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Messages
-                </Link>
-
-                <div className="px-3 py-2 text-white border-t border-primary-600 mt-2">
-                  <p className="text-sm mb-2">
-                    Logged in as <span className="font-semibold">{user?.name}</span>
+                <div className="px-3 py-3 border-t border-gray-200 mt-3">
+                  <p className="text-sm text-gray-600 mb-3">
+                    Logged in as <span className="font-semibold text-gray-900">{user?.name}</span>
                   </p>
                   <button
                     onClick={() => {
                       handleLogout();
                       setMobileMenuOpen(false);
                     }}
-                    className="w-full px-4 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700"
+                    className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200"
                   >
                     Logout
                   </button>
                 </div>
               </>
             ) : (
-              <div className="px-3 py-2 space-y-2">
+              <div className="px-3 py-3 space-y-2 border-t border-gray-200 mt-3">
                 <Link
-                  href="/login"
-                  className="block w-full px-4 py-2 text-center bg-primary-600 text-white rounded-md text-sm font-medium hover:bg-primary-500"
+                  href="/worker"
+                  className="block w-full px-4 py-2.5 text-center bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Login
+                  Find Work
                 </Link>
                 <Link
-                  href="/register"
-                  className="block w-full px-4 py-2 text-center bg-white text-primary-700 rounded-md text-sm font-medium hover:bg-primary-50"
+                  href="/business"
+                  className="block w-full px-4 py-2.5 text-center bg-green-600 text-white rounded-lg text-sm font-semibold hover:bg-green-700"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Sign Up
+                  Post a Job
                 </Link>
               </div>
             )}
