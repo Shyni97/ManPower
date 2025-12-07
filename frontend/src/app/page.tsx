@@ -65,7 +65,7 @@ export default function HomePage() {
               </div>
               <h1 className="text-5xl lg:text-6xl font-bold mb-6 leading-tight">
                 Find Your Perfect Job<br />
-                <span className="text-yellow-300">Or Hire Great Workers</span>
+                <span className="text-[#000000]">Or Hire Great Workers</span>
               </h1>
               <p className="text-lg text-blue-100 mb-8 leading-relaxed">
                 Connect with verified employers or find skilled workers. Simple, secure, and free to start.
@@ -89,11 +89,17 @@ export default function HomePage() {
             {/* Right Content - Worker Image */}
             <div className="relative">
               <div className="relative w-full h-96 lg:h-[500px]">
-                <div className="absolute inset-0 bg-gradient-to-l from-transparent to-blue-700 z-10"></div>
-                {/* Placeholder for worker image */}
-                <div className="w-full h-full bg-blue-800 rounded-lg flex items-center justify-center">
-                  <span className="text-8xl">👷</span>
-                </div>
+<div className="relative">
+  <div className="relative w-full h-96 lg:h-[500px]">
+    {/* Worker Image */}
+    <img
+      src="/4.jpg"
+      alt="Workers"
+      className="w-full h-full object-cover rounded-lg"
+    />
+  </div>
+</div>
+
               </div>
             </div>
           </div>
@@ -539,50 +545,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center">
-            {/* Logo */}
-            <div className="mb-8">
-              <h3 className="text-2xl font-bold text-gray-900">
-                BUI<span className="text-[#f5c842]">L</span>DING
-              </h3>
-            </div>
-
-            {/* Navigation */}
-            <nav className="flex flex-wrap justify-center gap-8 mb-8">
-              <Link href="/" className="text-gray-600 hover:text-gray-900 transition-colors">Home</Link>
-              <Link href="/about" className="text-gray-600 hover:text-gray-900 transition-colors">About Us</Link>
-              <Link href="/jobs" className="text-gray-600 hover:text-gray-900 transition-colors">Project</Link>
-              <Link href="/services" className="text-gray-600 hover:text-gray-900 transition-colors">Service</Link>
-              <Link href="/team" className="text-gray-600 hover:text-gray-900 transition-colors">Our Team</Link>
-            </nav>
-
-            {/* Social Icons */}
-            <div className="flex gap-4 mb-8">
-              <a href="#" className="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center text-white hover:bg-[#f5c842] hover:text-gray-900 transition-colors">
-                <span className="text-sm font-bold">f</span>
-              </a>
-              <a href="#" className="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center text-white hover:bg-[#f5c842] hover:text-gray-900 transition-colors">
-                <span className="text-sm font-bold">𝕏</span>
-              </a>
-              <a href="#" className="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center text-white hover:bg-[#f5c842] hover:text-gray-900 transition-colors">
-                <span className="text-sm font-bold">in</span>
-              </a>
-              <a href="#" className="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center text-white hover:bg-[#f5c842] hover:text-gray-900 transition-colors">
-                <span className="text-sm font-bold">yt</span>
-              </a>
-            </div>
-
-            {/* Copyright */}
-            <p className="text-gray-600 text-sm">
-              ©2023 DesignAxen. All Copyrights are reserved
-            </p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
